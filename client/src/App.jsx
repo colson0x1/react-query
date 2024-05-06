@@ -8,6 +8,8 @@ const POSTS = [
 ];
 
 function App() {
+  console.log(POSTS);
+
   const postsQuery = useQuery({
     // queryKey is key that uniquely identifies this query
     queryKey: ['posts'],
@@ -31,6 +33,15 @@ function App() {
     /* queryFn: () => Promise.reject('Error Message'), */
   });
 
+  const newPostMutation = useMutation({
+    // Same, mutationFn expects to return a promise
+    mutationFn: (title) => {
+      return wait(1000).then(() =>
+        POSTS.push({ id: crypto.randomUUID(), title }),
+      );
+    },
+  });
+
   if (postsQuery.isLoading) return <h1>Loading...</h1>;
   if (postsQuery.isError) {
     return <pre>{JSON.stringify(postsQuery.error)}</pre>;
@@ -41,6 +52,9 @@ function App() {
       {postsQuery.data.map((post) => (
         <div key={post.id}>{post.title}</div>
       ))}
+      <button onClick={() => newPostMutation.mutate('New Post')}>
+        Add New
+      </button>
     </div>
   );
 }
