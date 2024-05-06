@@ -7,6 +7,28 @@ const POSTS = [
   { id: 2, title: 'Post 2' },
 ];
 
+// query keys pattern for endpoint
+// break apart our url
+// everytime we have /, we can think of it as a new element inside our array
+// and we just pass the value into it.
+// @ /posts -> ['posts']
+// Here add same posts in the beginning but also add 1 i.e its `id` (post.id)
+// @ /posts/1 -> ['posts', post.id]
+// Whenever there's filtering, its better to put inside of an object
+// { authorId: 1 }
+// that's going to be the filter that we use for this one route
+// @ /posts?authorId=1 -> ['posts', { authorId: 1 }]
+// here also add comments at the end of it along with post id
+// @ /posts/2/comments -> ['posts', post.id, 'comments']
+// NOTE:
+// The maain thing that we want to realize is, whenever we pass data like a
+// postId or an authorId into our queryKey here. We wanna make sure that
+// whatever function we define in queryFn, actually uses that data. That way
+// we can make sure that our actual key (in queryKey) and the thing that we're
+// quering and our function (queryFn), they're synced up together.
+// That way when we need to do some type of invalidation, we're invalidating
+// all the queries that have that particular key.
+
 function App() {
   console.log(POSTS);
   // This is just going to return the thing that we created on main.jsx but
@@ -19,8 +41,15 @@ function App() {
     queryKey: ['posts'],
     // This is the fn that runs to actually query our data
     // This fn always accepts a Promise (Any asynchronous code)
-    // So We just want to return a promise
-    queryFn: () => wait(1000).then(() => [...POSTS]),
+    // i.e queryFn must always return a promise cause this is going to be for
+    // asynchronous data
+    // we get an obj for queryFn as the argument
+    queryFn: (obj) =>
+      wait(1000).then(() => {
+        // console.log(obj);
+
+        return [...POSTS];
+      }),
 
     // For some reason if this returns an error, what we can do is we can
     // just make this reject a Promise
@@ -37,6 +66,9 @@ function App() {
     /* queryFn: () => Promise.reject('Error Message'), */
   });
 
+  // postsQuery.status === 'loading'
+
+  /*
   const newPostMutation = useMutation({
     // Same, mutationFn expects to return a promise
     // This mutation is changing our underlying data for this queryKey i.e. ['posts']
@@ -57,6 +89,7 @@ function App() {
       queryClient.invalidateQueries(['posts']);
     },
   });
+  */
 
   if (postsQuery.isLoading) return <h1>Loading...</h1>;
   if (postsQuery.isError) {
@@ -68,12 +101,12 @@ function App() {
       {postsQuery.data.map((post) => (
         <div key={post.id}>{post.title}</div>
       ))}
-      <button
+      {/* <button
         disabled={newPostMutation.isLoading}
         onClick={() => newPostMutation.mutate('New Post')}
       >
         Add New
-      </button>
+      </button> */}
     </div>
   );
 }
