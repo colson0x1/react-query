@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { getPosts } from './api/posts';
+import { useQueries, useQuery } from '@tanstack/react-query';
+import { getPost, getPosts } from './api/posts';
 
 export default function PostsList1() {
   const postsQuery = useQuery({
@@ -9,6 +9,22 @@ export default function PostsList1() {
     // Every 1 second, refetch our data
     refetchInterval: 1000,
   });
+
+  // If we need to do a bunch of different queries inside of an array, we need
+  // to use useQueries instead of using an actual array syntax and then we pass
+  // the array inside right here
+  // Thisis much more common if we for example have a list of IDs that we want
+  // to render, we probably would do in a scenario like this
+  const queries = useQueries({
+    queries: (postsQuery?.data ?? []).map((post) => {
+      return {
+        queryKey: ['posts', post.id],
+        queryFn: () => getPost(post.id),
+      };
+    }),
+  });
+
+  console.log(queries.map((q) => q.data));
 
   // Anytime that we're refetching our query, it is going to be in that
   // `fetching` status
