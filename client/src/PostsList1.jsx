@@ -15,6 +15,7 @@ export default function PostsList1() {
   // the array inside right here
   // Thisis much more common if we for example have a list of IDs that we want
   // to render, we probably would do in a scenario like this
+  /*
   const queries = useQueries({
     queries: (postsQuery?.data ?? []).map((post) => {
       return {
@@ -23,8 +24,9 @@ export default function PostsList1() {
       };
     }),
   });
+  */
 
-  console.log(queries.map((q) => q.data));
+  // console.log(queries.map((q) => q.data));
 
   // Anytime that we're refetching our query, it is going to be in that
   // `fetching` status
