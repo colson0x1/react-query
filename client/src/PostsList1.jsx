@@ -7,7 +7,19 @@ export default function PostsList1() {
     queryFn: getPosts,
     // staleTime: 1000,
     // Every 1 second, refetch our data
-    refetchInterval: 1000,
+    /* refetchInterval: 1000, */
+
+    // Initial data is going to be served and saved inside of our cache and it's
+    // going to be marked as fresh if we have some type of stale timer set up!
+    /* initialData: [{ id: 1, title: 'Initial Data' }], */
+
+    // placeHolderData is first going to show us the inital data and then it's
+    // going to load up our post and then it'll show us the actual data from
+    // getting the post. So First we'll show placeholder and then it'll show
+    // the newly fetched data.
+    // i.e Placeholder data will be immediately replaced by whatever our
+    // query is essentially awlays marked as stale!
+    placeholderData: [{ id: 1, title: 'Initial Data' }],
   });
 
   // If we need to do a bunch of different queries inside of an array, we need
