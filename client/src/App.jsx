@@ -8,6 +8,7 @@ import PostsList1 from './PostsList1';
 import PostsList2 from './PostsList2';
 import Post from './Post';
 import { CreatePost } from './CreatePost';
+import { PostListPaginated } from './PostListPaginated';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState(<PostsList1 />);
@@ -29,6 +30,9 @@ export default function App() {
         }
       >
         New Post
+      </button>
+      <button onClick={() => setCurrentPage(<PostListPaginated />)}>
+        Post List Paginated
       </button>
       <br />
       {currentPage}
